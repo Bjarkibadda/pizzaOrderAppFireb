@@ -81,10 +81,6 @@ Future<List<ProductList>> fetchAlbum() async {
       .map((data) => ProductList.fromJson(data))
       .toList();
 
-  print(response.body.toString());
-  print(response);
-  print("Af hverju virkar þetta ekki");
-
   if (response.statusCode == 200) {
     // If the server did return a 200 OK response,
     // then parse the JSON.
@@ -193,12 +189,12 @@ class _MyAppState extends State<MyApp> {
                                   child: GridTile(
                                     header: Center(
                                         child: Text(
-                                      '${snapshot.data![index].name}',
+                                      snapshot.data![index].name,
                                       style: TextStyle(
                                           color: Colors.green, fontSize: 50),
                                     )),
                                     child: Image.network(
-                                        'https://picsum.photos/250?image=9',
+                                        snapshot.data![index].imgUrl,
                                         fit: BoxFit.fitWidth),
                                   )),
                             ),
