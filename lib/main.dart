@@ -56,18 +56,12 @@ class MyHttpOverrides extends HttpOverrides {
   }
 }
 
-List<Color> colorsList = [Colors.black, Colors.blue, Colors.pink, Colors.grey];
-
-Color GetColor() {
-  return colorsList[new Random().nextInt(colorsList.length)];
-}
-
 Future<String> getData() async {
-  print("10.02 maður?");
   final url = Uri.parse('https://localhost:5001/Product');
   http.Response response = await http.get(url);
+
+  // only for debugging reasons
   print(response.body.toString());
-  print(response);
 
   return response.body;
 }
@@ -99,21 +93,21 @@ class ProductList {
   final String name;
   final int price;
   final String imgUrl;
-  final String topics;
+  // final String topics;
 
   ProductList(
       {required this.id,
       required this.name,
       required this.price,
-      required this.imgUrl,
-      required this.topics});
+      required this.imgUrl});
+  // required this.topics});
   factory ProductList.fromJson(Map<String, dynamic> json) {
     return ProductList(
         id: json['id'],
         name: json['name'],
         price: json['price'],
-        imgUrl: json['imgUrl'],
-        topics: json['topics']);
+        imgUrl: json['imgUrl']);
+    // topics: json['topics']);
   }
 }
 
