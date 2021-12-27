@@ -9,14 +9,15 @@ class IdProd {
   final int? id;
   IdProd(this.id);
 
-  Future<Product> fetchProducts() async {
+  Future<List<Product>> fetchProducts() async {
     HttpOverrides.global = MyHttpOverrides();
     final url = Uri.parse('https://localhost:5001/Product/');
     final response = await http.get(url);
-    var prod = json.decode(response.body)['data'];
-    Product myProd = Product.fromJson((prod));
+    var products = (json.decode(response.body)['data'] as List)
+        .map((data) => Product.fromJson(data))
+        .toList();
 
-    return myProd;
+    return products;
   }
 
   Future<Product> fetchProduct() async {
