@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:food_order_app/Models/product.dart';
 import 'package:food_order_app/Models/menu_item.dart';
+import 'package:food_order_app/Providers/Order_cart_service.dart';
 import 'package:http/http.dart' as http;
+import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:async';
 import '../main.dart';
@@ -41,11 +43,23 @@ class MainWidget extends StatelessWidget {
     Future<List<MenuItem>> proddari = fetchMenu();
     return Scaffold(
         appBar: AppBar(
-            iconTheme: const IconThemeData(color: Colors.white),
-            backgroundColor: Colors.transparent,
-            elevation: 0,
-            title: SizedBox(
-                height: 45, child: Image.asset('Assets/Images/BBPizza.png'))),
+          iconTheme: const IconThemeData(color: Colors.white),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          title: SizedBox(
+              height: 45, child: Image.asset('Assets/Images/BBPizza.png')),
+          actions: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, '/cart'),
+                  child: const Icon(
+                    Icons.shopping_basket,
+                    color: Colors.orange,
+                  )),
+            )
+          ],
+        ),
         body: Column(
           children: [
             Expanded(
@@ -110,9 +124,9 @@ class MainWidget extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            const Padding(
+                                            Padding(
                                               padding: EdgeInsets.all(15.0),
-                                              child: Text('3000 kr.'),
+                                              child: Price_Column(),
                                             ),
                                             Column(
                                               children: [
@@ -133,7 +147,10 @@ class MainWidget extends StatelessWidget {
                                                               int idx) {
                                                         return Text(snapshot
                                                             .data![index]
-                                                            .topics[idx]);
+                                                            .topics
+                                                            .values
+                                                            .toList()[idx]
+                                                            .toString());
                                                       }),
                                                 )
                                               ],
@@ -143,18 +160,31 @@ class MainWidget extends StatelessWidget {
                                       ],
                                     ),
                                     Container(
-                                      height: 60,
-                                      margin: const EdgeInsets.all(10.0),
+                                      height: 15,
+                                      margin: const EdgeInsets.all(5.0),
                                       decoration: const BoxDecoration(
                                           border: Border(
                                               bottom: BorderSide(
                                                   color: Colors.orange))),
                                     ),
-                                    Text(snapshot.data![index].product,
+                                    Text(snapshot.data![index].productName,
                                         textAlign: TextAlign.right,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyText2)
+                                            .bodyText2),
+                                    Container(
+                                        margin: const EdgeInsets.all(10),
+                                        child: Text(
+                                          snapshot.data![index].description,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .caption,
+                                        )),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    AddToCartButton(
+                                        snapshot: snapshot.data![index])
                                   ],
                                 ),
                               ),
@@ -172,22 +202,98 @@ class MainWidget extends StatelessWidget {
   }
 }
 
-// ListView.builder(
-//                                                       shrinkWrap: true,
-//                                                       padding:
-//                                                           const EdgeInsets.all(
-//                                                               8),
-//                                                       itemCount: snapshot
-//                                                           .data![index]
-//                                                           .topics
-//                                                           .length,
-//                                                       itemBuilder:
-//                                                           (BuildContext context,
-//                                                               int idx) {
-//                                                         return Container(
-//                                                           height: 10,
-//                                                           child: Center(
-//                                                               child: Text(snapshot
-//                                                                   .data![index]
-//                                                                   .topics[idx])),
-//                                                         );
+class AddToCartButton extends StatefulWidget {
+  final MenuItem snapshot;
+
+  //const AddToCartButton({required this.snapshot});
+
+  const AddToCartButton({Key? key, required this.snapshot}) : super(key: key);
+
+  @override
+  State<AddToCartButton> createState() => _AddToCartButtonState();
+}
+
+bool tapped = false;
+
+class _AddToCartButtonState extends State<AddToCartButton> {
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<OrderChartService>(builder: (context, chartService, child) {
+      return GestureDetector(
+        onTapDown: (_) {
+          setState(() {
+            tapped = true;
+          });
+        },
+        onTapUp: (_) {
+          setState(() {
+            tapped = false;
+          });
+        },
+        onTap: () => chartService.addToChart(widget.snapshot),
+        child: Container(
+          decoration: BoxDecoration(
+              color: tapped
+                  ? Colors.orange.withOpacity(0.7)
+                  : Colors.orange.withOpacity(0.1),
+              borderRadius: BorderRadius.circular(25.0),
+              border: Border.all(color: Colors.orange)),
+          padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+          margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text("Bæta við pöntun"),
+              const SizedBox(
+                width: 10,
+              ),
+              const Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Icon(
+                    Icons.shopping_cart_rounded,
+                    color: Colors.orange,
+                  )),
+            ],
+          ),
+        ),
+      );
+    });
+  }
+}
+
+// setja í nýjan file
+class Price_Column extends StatefulWidget {
+  const Price_Column({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  State<Price_Column> createState() => _Price_ColumnState();
+}
+
+class _Price_ColumnState extends State<Price_Column> {
+  bool size = true;
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(size ? '3000 kr.' : '2000 kr.'),
+        Row(
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            const Text('12"'),
+            Transform.scale(
+              scale: 0.7,
+              child: Switch.adaptive(
+                  value: size,
+                  onChanged: (size) => setState(() => this.size = size)),
+            ),
+            const Text('16"')
+          ],
+        ),
+      ],
+    );
+  }
+}

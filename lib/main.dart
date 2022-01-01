@@ -1,10 +1,16 @@
+import 'package:food_order_app/Providers/Order_cart_service.dart';
 import 'package:food_order_app/Widgets/main_widget.dart';
 import 'package:flutter/material.dart';
+import 'package:food_order_app/screens/cart_screen.dart';
 
 import 'dart:io';
 
+import 'package:provider/provider.dart';
+
 //List<dynamic> prdList = String<Post>.from(l.map((model)=> Post.fromJson(model)));
-void main() => runApp(const MyApp());
+void main() => runApp(MultiProvider(
+    providers: [ChangeNotifierProvider(create: (_) => OrderChartService())],
+    child: MyApp()));
 
 class MyHttpOverrides extends HttpOverrides {
   // muna að breyta áður en gefið út. => https://stackoverflow.com/questions/54285172/how-to-solve-flutter-certificate-verify-failed-error-while-performing-a-post-req
@@ -27,7 +33,13 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        home: MainWidget(),
+        initialRoute: ('/'),
+        routes: {
+          // When navigating to the "/" route, build the FirstScreen widget.
+          '/': (context) => const MainWidget(),
+          // When navigating to the "/second" route, build the SecondScreen widget.
+          '/cart': (context) => CartScreen(),
+        },
         theme: ThemeData(
           // Define the default brightness and colors.
           brightness: Brightness.dark,
