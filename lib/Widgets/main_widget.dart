@@ -8,14 +8,13 @@ import 'dart:convert';
 import 'dart:async';
 import '../main.dart';
 import 'dart:io';
+import 'package:badges/badges.dart';
 
 class MainWidget extends StatelessWidget {
   const MainWidget({Key? key}) : super(key: key);
 
   Future<List<Product>> fetchProducts() async {
-    // ath eflaust algjör óþarfi að hafa þetta fall, hægt að kalla bara beint í fetchProducts.
-    var myList = <
-        Product>[]; // á eftir að fetcha lista af products úr api! þarf að mappa. Gert í Prodyuct klasanum
+    // ath eflaust algjör óþarfi að hafa þetta fall, hægt að kalla bara beint í fetchProducts.// á eftir að fetcha lista af products úr api! þarf að mappa. Gert í Prodyuct klasanum
     return await IdProd(0).fetchProducts();
   }
 
@@ -42,23 +41,9 @@ class MainWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Future<List<MenuItem>> proddari = fetchMenu();
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: const IconThemeData(color: Colors.white),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          title: SizedBox(
-              height: 45, child: Image.asset('Assets/Images/BBPizza.png')),
-          actions: [
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-              child: GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, '/cart'),
-                  child: const Icon(
-                    Icons.shopping_basket,
-                    color: Colors.orange,
-                  )),
-            )
-          ],
+        appBar: const PreferredSize(
+          preferredSize: Size.fromHeight(60),
+          child: CustomAppBar(),
         ),
         body: Column(
           children: [
@@ -145,6 +130,11 @@ class MainWidget extends StatelessWidget {
                                                       itemBuilder:
                                                           (BuildContext context,
                                                               int idx) {
+                                                        var test = snapshot
+                                                            .data![index]
+                                                            .topics
+                                                            .keys
+                                                            .first;
                                                         return Text(snapshot
                                                             .data![index]
                                                             .topics
@@ -199,6 +189,35 @@ class MainWidget extends StatelessWidget {
             Container(),
           ],
         ));
+  }
+}
+
+class CustomAppBar extends StatelessWidget {
+  const CustomAppBar({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Consumer<OrderChartService>(builder: (context, cartService, child) {
+      return AppBar(
+        iconTheme: const IconThemeData(color: Colors.white),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        title: SizedBox(
+            height: 45, child: Image.asset('Assets/Images/BBPizza.png')),
+        actions: [
+          Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 20, 0),
+              child: GestureDetector(
+                  onTap: () => Navigator.pushNamed(context, '/cart'),
+                  child: Badge(
+                    badgeContent: Text(cartService.itemCount().toString()),
+                    child: const Icon(Icons.shopping_cart),
+                  )))
+        ],
+      );
+    });
   }
 }
 

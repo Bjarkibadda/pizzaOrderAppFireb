@@ -1,30 +1,23 @@
 class MenuItem {
+  late int id;
   late String description;
   late int productId;
   late String productName;
-  late Map<int, String> topics;
+  late Map<String, String> topics;
   late int price;
   late String imageUrl;
+  int count = 1;
 
-  MenuItem(this.description, this.productId, this.productName, this.topics,
-      this.price, this.imageUrl);
+  MenuItem(this.id, this.description, this.productId, this.productName,
+      this.topics, this.price, this.imageUrl);
   factory MenuItem.fromJson(Map<dynamic, dynamic> json) {
-    return MenuItem(json['description'], json['productId'], json['productName'],
-        json['topics'].cast<int, String>(), json['price'], json['imageUrl']);
+    return MenuItem(
+        json['id'],
+        json['description'],
+        json['productId'],
+        json['productName'],
+        json['topics'].cast<String, String>(),
+        json['price'],
+        json['imageUrl']);
   }
 }
-
-// class MenuItem {
-//   late String description;
-//   late String product;
-//   late Map<nt,String > topics;
-//   late int price;
-//   late String imageUrl;
-
-//   MenuItem(
-//       this.description, this.product, this.topics, this.price, this.imageUrl);
-//   factory MenuItem.fromJson(Map<dynamic, dynamic> json) {
-//     return MenuItem(json['description'], json['product'],
-//         json['topics'].cast<String>(), json['price'], json['imageUrl']);
-//   }
-// }

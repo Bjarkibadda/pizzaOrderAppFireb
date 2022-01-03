@@ -12,7 +12,14 @@ class OrderChartService extends ChangeNotifier {
   List<MenuItem> chartList = [];
 
   void addToChart(MenuItem item) {
-    chartList.add(item);
+    var exist = false;
+    for (var i in chartList) {
+      if (i.id == item.id) {
+        i.count += 1;
+        exist = true;
+      }
+    }
+    if (!exist) chartList.add(item);
     notifyListeners();
   }
 
@@ -38,10 +45,38 @@ class OrderChartService extends ChangeNotifier {
 
   List<NewOrderItem> getOrderItems() {
     List<NewOrderItem> orderItemsList = [];
+    List<int> topicIds = [];
     for (var item in chartList) {
-      orderItemsList
-          .add(NewOrderItem(item.productId, item.topics.keys.toList()));
+      for (var topic in item.topics.keys) {
+        topicIds.add(int.parse(topic));
+      }
+      orderItemsList.add(NewOrderItem(item.productId, topicIds));
     }
     return orderItemsList;
+  }
+
+  void deleteFromOrder(MenuItem item) {
+    item.count = 1;
+    chartList.remove(item);
+    notifyListeners();
+  }
+
+  void lowerCount(MenuItem item) {
+    if (item.count < 2) return;
+    item.count -= 1;
+    notifyListeners();
+  }
+
+  void addToCount(MenuItem item) {
+    item.count += 1;
+    notifyListeners();
+  }
+
+  int itemCount() {
+    var count = 0;
+    for (var item in chartList) {
+      count += item.count;
+    }
+    return count;
   }
 }

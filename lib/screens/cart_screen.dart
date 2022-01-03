@@ -37,14 +37,39 @@ class CartScreen extends StatelessWidget {
                   child: ListView.separated(
                     shrinkWrap: true,
                     itemBuilder: (BuildContext context, int index) {
+                      var menuItem = cartService.chartList[index];
+                      var isMultiple = cartService.chartList[index].count > 1;
+
                       return Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
-                          Text('1x'),
-                          Text(cartService.chartList[index].productName),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              IconButton(
+                                padding: EdgeInsets.all(1),
+                                icon: const Icon(Icons.arrow_upward,
+                                    color: Colors.green),
+                                onPressed: () =>
+                                    {cartService.addToCount(menuItem)},
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.arrow_downward,
+                                    color: Colors.deepOrange),
+                                onPressed: () =>
+                                    {cartService.lowerCount(menuItem)},
+                              ),
+                            ],
+                          ),
+                          Text("${menuItem.count}x"),
+                          Text(menuItem.productName),
                           IconButton(
-                              onPressed: () => {print('hello')},
-                              icon: Icon(Icons.delete))
+                              onPressed: () => {
+                                    cartService.deleteFromOrder(
+                                        cartService.chartList[index])
+                                  },
+                              icon: const Icon(Icons.delete))
                         ],
                       );
                     },
