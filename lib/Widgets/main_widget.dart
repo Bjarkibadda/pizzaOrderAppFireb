@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:food_order_app/Models/product.dart';
 import 'package:food_order_app/Models/menu_item.dart';
 import 'package:food_order_app/Providers/Order_cart_service.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:http/http.dart' as http;
 import 'package:provider/provider.dart';
 import 'dart:convert';
 import 'dart:async';
 import '../main.dart';
 import 'dart:io';
-import 'package:badges/badges.dart';
+import 'custom_app_bar.dart';
 
 class MainWidget extends StatelessWidget {
   const MainWidget({Key? key}) : super(key: key);
@@ -95,9 +96,9 @@ class MainWidget extends StatelessWidget {
                                       alignment: Alignment.bottomCenter,
                                       children: [
                                         Positioned(
-                                          top: -25,
+                                          top: -40,
                                           child: CircleAvatar(
-                                            radius: 60.0,
+                                            radius: 50.0,
                                             backgroundColor: Colors.transparent,
                                             backgroundImage: NetworkImage(
                                                 snapshot.data![index].imageUrl),
@@ -110,8 +111,13 @@ class MainWidget extends StatelessWidget {
                                               MainAxisAlignment.spaceBetween,
                                           children: [
                                             Padding(
-                                              padding: EdgeInsets.all(15.0),
-                                              child: Price_Column(),
+                                              padding:
+                                                  const EdgeInsets.all(15.0),
+                                              child: Price_Column(
+                                                  price: snapshot
+                                                      .data![index].price,
+                                                  menuItem:
+                                                      snapshot.data![index]),
                                             ),
                                             Column(
                                               children: [
@@ -150,7 +156,7 @@ class MainWidget extends StatelessWidget {
                                       ],
                                     ),
                                     Container(
-                                      height: 15,
+                                      height: 0,
                                       margin: const EdgeInsets.all(5.0),
                                       decoration: const BoxDecoration(
                                           border: Border(
@@ -173,6 +179,7 @@ class MainWidget extends StatelessWidget {
                                     const SizedBox(
                                       height: 10,
                                     ),
+                                    const Spacer(),
                                     AddToCartButton(
                                         snapshot: snapshot.data![index])
                                   ],
@@ -189,35 +196,6 @@ class MainWidget extends StatelessWidget {
             Container(),
           ],
         ));
-  }
-}
-
-class CustomAppBar extends StatelessWidget {
-  const CustomAppBar({
-    Key? key,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Consumer<OrderChartService>(builder: (context, cartService, child) {
-      return AppBar(
-        iconTheme: const IconThemeData(color: Colors.white),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        title: SizedBox(
-            height: 45, child: Image.asset('Assets/Images/BBPizza.png')),
-        actions: [
-          Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 20, 0),
-              child: GestureDetector(
-                  onTap: () => Navigator.pushNamed(context, '/cart'),
-                  child: Badge(
-                    badgeContent: Text(cartService.itemCount().toString()),
-                    child: const Icon(Icons.shopping_cart),
-                  )))
-        ],
-      );
-    });
   }
 }
 
@@ -238,41 +216,44 @@ class _AddToCartButtonState extends State<AddToCartButton> {
   @override
   Widget build(BuildContext context) {
     return Consumer<OrderChartService>(builder: (context, chartService, child) {
-      return GestureDetector(
-        onTapDown: (_) {
-          setState(() {
-            tapped = true;
-          });
-        },
-        onTapUp: (_) {
-          setState(() {
-            tapped = false;
-          });
-        },
-        onTap: () => chartService.addToChart(widget.snapshot),
-        child: Container(
-          decoration: BoxDecoration(
-              color: tapped
-                  ? Colors.orange.withOpacity(0.7)
-                  : Colors.orange.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(25.0),
-              border: Border.all(color: Colors.orange)),
-          padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-          margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text("Bæta við pöntun"),
-              const SizedBox(
-                width: 10,
-              ),
-              const Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Icon(
-                    Icons.shopping_cart_rounded,
-                    color: Colors.orange,
-                  )),
-            ],
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 12),
+        child: GestureDetector(
+          onTapDown: (_) {
+            setState(() {
+              tapped = true;
+            });
+          },
+          onTapUp: (_) {
+            setState(() {
+              tapped = false;
+            });
+          },
+          onTap: () => chartService.addToChart(widget.snapshot),
+          child: Container(
+            decoration: BoxDecoration(
+                color: tapped
+                    ? Colors.orange.withOpacity(0.7)
+                    : Colors.orange.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(25.0),
+                border: Border.all(color: Colors.orange)),
+            padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+            margin: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text("Bæta við pöntun"),
+                const SizedBox(
+                  width: 10,
+                ),
+                const Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Icon(
+                      Icons.shopping_cart_rounded,
+                      color: Colors.orange,
+                    )),
+              ],
+            ),
           ),
         ),
       );
@@ -282,37 +263,70 @@ class _AddToCartButtonState extends State<AddToCartButton> {
 
 // setja í nýjan file
 class Price_Column extends StatefulWidget {
-  const Price_Column({
-    Key? key,
-  }) : super(key: key);
+  Price_Column({Key? key, required this.price, required this.menuItem})
+      : super(key: key);
 
+  final int price;
+  MenuItem menuItem;
   @override
   State<Price_Column> createState() => _Price_ColumnState();
 }
 
 class _Price_ColumnState extends State<Price_Column> {
   bool size = true;
+  List<bool> _selection = [true, false];
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(size ? '3000 kr.' : '2000 kr.'),
-        Row(
-          children: [
-            const SizedBox(
-              height: 10,
-            ),
-            const Text('12"'),
-            Transform.scale(
-              scale: 0.7,
-              child: Switch.adaptive(
-                  value: size,
-                  onChanged: (size) => setState(() => this.size = size)),
-            ),
-            const Text('16"')
-          ],
-        ),
-      ],
-    );
+    return Consumer<OrderChartService>(builder: (context, chartService, child) {
+      return Column(
+        children: [
+          Text(intl.NumberFormat.decimalPattern()
+                      .format(widget.price)
+                      .toString()
+                      .replaceAll(',', '.') +
+                  " kr."
+              // widget.price.toString(),
+              ),
+          Row(
+            children: [
+              const SizedBox(
+                height: 10,
+              ),
+              Transform.scale(
+                scale: 0.7,
+                child: ToggleButtons(
+                    borderRadius: BorderRadius.circular(15),
+                    children: [
+                      const Text(
+                        "16''",
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      ),
+                      const Text(
+                        "12''",
+                        style: TextStyle(fontSize: 20, color: Colors.white),
+                      )
+                    ],
+                    fillColor: Colors.red.withOpacity(0.4),
+                    selectedBorderColor: Colors.orange,
+                    borderWidth: 2,
+                    splashColor: Colors.green,
+                    isSelected: _selection,
+                    onPressed: (int index) {
+                      setState(() {
+                        if (index == 0) {
+                          _selection = [true, false];
+                          chartService.changeSize(widget.menuItem, true);
+                        } else {
+                          _selection = [false, true];
+                          chartService.changeSize(widget.menuItem, false);
+                        }
+                      });
+                    }),
+              )
+            ],
+          ),
+        ],
+      );
+    });
   }
 }

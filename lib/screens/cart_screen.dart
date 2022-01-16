@@ -19,66 +19,69 @@ class CartScreen extends StatelessWidget {
           }
           return Column(
             children: [
-              const SizedBox(height: 20),
+              const SizedBox(height: 35),
               Text('Pöntunin þín',
                   style: Theme.of(context).textTheme.headline4),
+              const SizedBox(height: 20),
               Container(
                 padding: const EdgeInsets.all(15),
                 margin: const EdgeInsets.all(15),
-                constraints: BoxConstraints(
-                    maxHeight: MediaQuery.of(context).size.height / 2),
+                height: MediaQuery.of(context).size.height / 2,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(25.0),
                   border: Border.all(color: Colors.orange),
                 ),
-                // color: Colors.orange.withOpacity(0.5)),
-                child: Scrollbar(
-                  isAlwaysShown: true,
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    itemBuilder: (BuildContext context, int index) {
-                      var menuItem = cartService.chartList[index];
-                      var isMultiple = cartService.chartList[index].count > 1;
+                child: Column(
+                  children: [
+                    Expanded(
+                      child: Scrollbar(
+                        isAlwaysShown: true,
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          itemBuilder: (BuildContext context, int index) {
+                            var menuItem = cartService.chartList[index];
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                Text("${menuItem.count16}x"),
+                                Text(menuItem.productName),
+                                Text(
+                                    "${menuItem.price * menuItem.count16} kr."),
 
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          Row(
-                            mainAxisSize: MainAxisSize.min,
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              IconButton(
-                                padding: EdgeInsets.all(1),
-                                icon: const Icon(Icons.arrow_upward,
-                                    color: Colors.green),
-                                onPressed: () =>
-                                    {cartService.addToCount(menuItem)},
-                              ),
-                              IconButton(
-                                icon: const Icon(Icons.arrow_downward,
-                                    color: Colors.deepOrange),
-                                onPressed: () =>
-                                    {cartService.lowerCount(menuItem)},
-                              ),
-                            ],
+                                //  print("The concatenated string : ${res}")
+                                IconButton(
+                                    onPressed: () => {
+                                          cartService.deleteFromOrder(
+                                              cartService.chartList[index])
+                                        },
+                                    icon: const Icon(Icons.delete)),
+                              ],
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) =>
+                              const SizedBox(
+                            height: 20,
                           ),
-                          Text("${menuItem.count}x"),
-                          Text(menuItem.productName),
-                          IconButton(
-                              onPressed: () => {
-                                    cartService.deleteFromOrder(
-                                        cartService.chartList[index])
-                                  },
-                              icon: const Icon(Icons.delete))
-                        ],
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) =>
-                        const SizedBox(
-                      height: 20,
+                          itemCount: cartService.chartList.length,
+                        ),
+                      ),
                     ),
-                    itemCount: cartService.chartList.length,
-                  ),
+                    Container(
+                      height: 40,
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(25),
+                          color: Colors.orange.withOpacity(0.4)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text("Heildarverð",
+                              style: Theme.of(context).textTheme.headline6),
+                          const SizedBox(width: 10),
+                          Text(cartService.totalPrice().toString() + " kr.")
+                        ],
+                      ),
+                    )
+                  ],
                 ),
               ),
               TextButton(

@@ -6,7 +6,9 @@ class MenuItem {
   late Map<String, String> topics;
   late int price;
   late String imageUrl;
-  int count = 1;
+  int count12 = 1;
+  int count16 = 1;
+  bool isBig = true;
 
   MenuItem(this.id, this.description, this.productId, this.productName,
       this.topics, this.price, this.imageUrl);
