@@ -80,7 +80,7 @@ class OrderChartService extends ChangeNotifier {
   int totalPrice() {
     var totalPrice = 0;
     for (var item in chartList) {
-      totalPrice += item.price;
+      totalPrice += item.price12;
     }
     return totalPrice;
   }

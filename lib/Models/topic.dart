@@ -4,7 +4,10 @@ class Topic {
   final int id;
   final String name;
   final int price;
-  final List<OrderItem> orderItems;
 
-  Topic(this.id, this.name, this.price, this.orderItems);
+  Topic(this.id, this.name, this.price);
+
+  factory Topic.fromJson(Map<dynamic, dynamic> json) {
+    return Topic(json['id'], json['name'], json['price']);
+  }
 }

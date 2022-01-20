@@ -46,7 +46,7 @@ class CartScreen extends StatelessWidget {
                                 Text("${menuItem.count16}x"),
                                 Text(menuItem.productName),
                                 Text(
-                                    "${menuItem.price * menuItem.count16} kr."),
+                                    "${menuItem.price12 * menuItem.count16} kr."),
 
                                 //  print("The concatenated string : ${res}")
                                 IconButton(

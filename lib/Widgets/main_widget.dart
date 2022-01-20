@@ -114,8 +114,10 @@ class MainWidget extends StatelessWidget {
                                               padding:
                                                   const EdgeInsets.all(15.0),
                                               child: Price_Column(
-                                                  price: snapshot
-                                                      .data![index].price,
+                                                  price12: snapshot
+                                                      .data![index].price12,
+                                                  price16: snapshot
+                                                      .data![index].price16,
                                                   menuItem:
                                                       snapshot.data![index]),
                                             ),
@@ -263,10 +265,15 @@ class _AddToCartButtonState extends State<AddToCartButton> {
 
 // setja í nýjan file
 class Price_Column extends StatefulWidget {
-  Price_Column({Key? key, required this.price, required this.menuItem})
+  Price_Column(
+      {Key? key,
+      required this.price12,
+      required this.price16,
+      required this.menuItem})
       : super(key: key);
 
-  final int price;
+  final int price12;
+  final int price16;
   MenuItem menuItem;
   @override
   State<Price_Column> createState() => _Price_ColumnState();
@@ -277,11 +284,15 @@ class _Price_ColumnState extends State<Price_Column> {
   List<bool> _selection = [true, false];
   @override
   Widget build(BuildContext context) {
+    var price = widget.price12;
+    if (_selection[0] == true) {
+      price = widget.price16;
+    }
     return Consumer<OrderChartService>(builder: (context, chartService, child) {
       return Column(
         children: [
           Text(intl.NumberFormat.decimalPattern()
-                      .format(widget.price)
+                      .format(price)
                       .toString()
                       .replaceAll(',', '.') +
                   " kr."
