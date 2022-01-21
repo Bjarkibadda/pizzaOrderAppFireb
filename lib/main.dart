@@ -2,6 +2,7 @@ import 'package:food_order_app/Providers/Order_cart_service.dart';
 import 'package:food_order_app/Widgets/main_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:food_order_app/screens/cart_screen.dart';
+import 'package:food_order_app/screens/custom_pizza_screen.dart';
 import 'package:food_order_app/screens/main_screen.dart';
 
 import 'dart:io';
@@ -40,6 +41,7 @@ class _MyAppState extends State<MyApp> {
           // When navigating to the "/second" route, build the SecondScreen widget.
           '/cart': (context) => CartScreen(),
           '/menu': (context) => const MainWidget(),
+          '/custom': (context) => const CustomPizza()
         },
         theme: ThemeData(
           // Define the default brightness and colors.

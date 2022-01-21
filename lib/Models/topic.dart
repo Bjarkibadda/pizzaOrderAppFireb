@@ -1,5 +1,3 @@
-import 'package:food_order_app/Models/order_item.dart';
-
 class Topic {
   final int id;
   final String name;

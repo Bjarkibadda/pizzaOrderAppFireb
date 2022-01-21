@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../Widgets/custom_app_bar.dart';
 
 class MainScreen extends StatelessWidget {
+  const MainScreen({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -10,9 +12,9 @@ class MainScreen extends StatelessWidget {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          SizedBox(height: 40),
-          MenuButtons(text: "Pizzur á matseðli", route: '/menu'),
-          MenuButtons(text: "Do Your own!", route: '/menu')
+          const SizedBox(height: 40),
+          const MenuButtons(text: "Pizzur á matseðli", route: '/menu'),
+          const MenuButtons(text: "Do Your own!", route: '/custom')
         ],
       ),
     );
@@ -20,7 +22,7 @@ class MainScreen extends StatelessWidget {
 }
 
 class MenuButtons extends StatelessWidget {
-  MenuButtons({
+  const MenuButtons({
     Key? key,
     required this.text,
     required this.route,
