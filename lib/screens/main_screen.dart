@@ -11,10 +11,10 @@ class MainScreen extends StatelessWidget {
           preferredSize: Size.fromHeight(60), child: CustomAppBar()),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          const SizedBox(height: 40),
-          const MenuButtons(text: "Pizzur á matseðli", route: '/menu'),
-          const MenuButtons(text: "Do Your own!", route: '/custom')
+        children: const [
+          SizedBox(height: 40),
+          MenuButtons(text: "Pizzur á matseðli", route: '/menu'),
+          MenuButtons(text: "Do Your own!", route: '/custom')
         ],
       ),
     );
