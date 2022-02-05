@@ -1,6 +1,7 @@
 class NewOrderItem {
   final int productId;
   final List<int> topicsId;
+  var size = true; // true = 16" false = 12"
 
   NewOrderItem(this.productId, this.topicsId);
 

@@ -39,7 +39,7 @@ class CartScreen extends StatelessWidget {
                         child: ListView.separated(
                           shrinkWrap: true,
                           itemBuilder: (BuildContext context, int index) {
-                            var menuItem = cartService.chartList[index];
+                            var menuItem = cartService.menuList[index];
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
@@ -52,7 +52,7 @@ class CartScreen extends StatelessWidget {
                                 IconButton(
                                     onPressed: () => {
                                           cartService.deleteFromOrder(
-                                              cartService.chartList[index])
+                                              cartService.menuList[index])
                                         },
                                     icon: const Icon(Icons.delete)),
                               ],
@@ -62,7 +62,7 @@ class CartScreen extends StatelessWidget {
                               const SizedBox(
                             height: 20,
                           ),
-                          itemCount: cartService.chartList.length,
+                          itemCount: cartService.menuList.length,
                         ),
                       ),
                     ),
