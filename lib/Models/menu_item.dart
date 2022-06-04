@@ -1,4 +1,4 @@
-class MenuItem {
+class MenuDish {
   late int id;
   late String description;
   late int productId;
@@ -11,10 +11,10 @@ class MenuItem {
   int count16 = 1;
   bool isBig = true;
 
-  MenuItem(this.id, this.description, this.productId, this.productName,
+  MenuDish(this.id, this.description, this.productId, this.productName,
       this.topics, this.price12, this.price16, this.imageUrl);
-  factory MenuItem.fromJson(Map<dynamic, dynamic> json) {
-    return MenuItem(
+  factory MenuDish.fromJson(Map<dynamic, dynamic> json) {
+    return MenuDish(
         json['id'],
         json['description'],
         json['productId'],

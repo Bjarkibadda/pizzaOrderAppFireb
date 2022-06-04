@@ -40,8 +40,6 @@ class _CustomPizzaState extends State<CustomPizza> {
     _fetchedTopics = fetchTopics();
   }
 
-  bool _isChecked = false;
-
   List<int> pickedTopics = [];
 
   @override
@@ -84,7 +82,7 @@ class _CustomPizzaState extends State<CustomPizza> {
                                           onChanged: (value) {
                                             setState(() {
                                               _boolList2[index] = value!;
-                                              if (value = true) {
+                                              if (value == true) {
                                                 pickedTopics.add(
                                                     snapshot.data![index].id);
                                               } else {

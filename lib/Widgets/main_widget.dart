@@ -19,7 +19,7 @@ class MainWidget extends StatelessWidget {
     return await IdProd(0).fetchProducts();
   }
 
-  Future<List<MenuItem>> fetchMenu() async {
+  Future<List<MenuDish>> fetchMenu() async {
     HttpOverrides.global =
         MyHttpOverrides(); // muna að breyta, ef ég tek þetta út kemur villa! skoða.
     final response = await http.get(Uri.parse(('https://localhost:5001/Menu')));
@@ -28,7 +28,7 @@ class MainWidget extends StatelessWidget {
       // If the server did return a 200 OK response,
       // then parse the JSON.
       var menu = (json.decode(response.body)['data'] as List)
-          .map((data) => MenuItem.fromJson(data))
+          .map((data) => MenuDish.fromJson(data))
           .toList();
       return menu;
     } else {
@@ -40,7 +40,7 @@ class MainWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<List<MenuItem>> proddari = fetchMenu();
+    Future<List<MenuDish>> proddari = fetchMenu();
     return Scaffold(
         appBar: const PreferredSize(
           preferredSize: Size.fromHeight(60),
@@ -53,7 +53,7 @@ class MainWidget extends StatelessWidget {
               width: MediaQuery.of(context).size.width - 50,
               child: Align(
                 alignment: Alignment.center,
-                child: FutureBuilder<List<MenuItem>>(
+                child: FutureBuilder<List<MenuDish>>(
                   // spurning hvort þetta ætti að vera sér widget! En þá þarf að finna út hvernig ég sendi gögnin með. Skoða codelab dæmið nr. 2
                   future: proddari,
                   builder: (context, snapshot) {
@@ -202,7 +202,7 @@ class MainWidget extends StatelessWidget {
 }
 
 class AddToCartButton extends StatefulWidget {
-  final MenuItem snapshot;
+  final MenuDish snapshot;
 
   //const AddToCartButton({required this.snapshot});
 
@@ -274,7 +274,7 @@ class Price_Column extends StatefulWidget {
 
   final int price12;
   final int price16;
-  MenuItem menuItem;
+  MenuDish menuItem;
   @override
   State<Price_Column> createState() => _Price_ColumnState();
 }

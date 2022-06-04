@@ -9,11 +9,11 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class OrderChartService extends ChangeNotifier {
-  List<MenuItem> menuList = [];
+  List<MenuDish> menuList = [];
   List<NewOrderItem> customList =
       []; // contains elements of custome made pizzas
 
-  void addToChart(MenuItem item) {
+  void addToChart(MenuDish item) {
     var exist = false;
     for (var i in menuList) {
       if (i.id == item.id && i.isBig == item.isBig) {
@@ -69,19 +69,19 @@ class OrderChartService extends ChangeNotifier {
     return orderItemsList;
   }
 
-  void deleteFromOrder(MenuItem item) {
+  void deleteFromOrder(MenuDish item) {
     item.count16 = 1;
     menuList.remove(item);
     notifyListeners();
   }
 
-  void lowerCount(MenuItem item) {
+  void lowerCount(MenuDish item) {
     if (item.count16 < 2) return;
     item.count16 -= 1;
     notifyListeners();
   }
 
-  void addToCount(MenuItem item) {
+  void addToCount(MenuDish item) {
     item.count16 += 1;
     notifyListeners();
   }
@@ -102,7 +102,7 @@ class OrderChartService extends ChangeNotifier {
     return totalPrice;
   }
 
-  void changeSize(MenuItem item, bool big) {
+  void changeSize(MenuDish item, bool big) {
     if (big == true) {
       item.isBig = true;
     } else {

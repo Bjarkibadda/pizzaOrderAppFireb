@@ -47,8 +47,6 @@ class CartScreen extends StatelessWidget {
                                 Text(menuItem.productName),
                                 Text(
                                     "${menuItem.price12 * menuItem.count16} kr."),
-
-                                //  print("The concatenated string : ${res}")
                                 IconButton(
                                     onPressed: () => {
                                           cartService.deleteFromOrder(
